@@ -1,0 +1,35 @@
+version: '3'
+services:
+  token_service:
+    container_name: token_service
+    restart: always
+    build: .
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+    ports:
+      - 3000:3000
+    networks:
+      - token_service_network
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - token_database
+
+  token_database:
+    container_name: token_database
+    image: mongo
+    ports:
+      - 27017:27017
+    networks:
+      - token_service_network
+    volumes:
+      - token_database:/data/db
+
+networks:
+  token_service_network:
+    driver: bridge
+
+volumes:
+  token_database:
